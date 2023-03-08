@@ -1,5 +1,6 @@
 const express = require('express');
 const models = require('./models');
+const cors = require('cors')
 const expressGraphQL = require('express-graphql');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -11,8 +12,13 @@ const schema = require('./schema/schema');
 // Create a new Express application
 const app = express();
 
+app.use(cors())
+
 // Replace with your mongoLab URI
-const MONGO_URI = '';
+const MONGO_URI = 'mongodb://root:cSKpvN58N2QGWzjs@cluster0-shard-00-00.qeicj.mongodb.net:27017,cluster0-shard-00-01.qeicj.mongodb.net:27017,cluster0-shard-00-02.qeicj.mongodb.net:27017/auth?ssl=true&replicaSet=atlas-c2vrng-shard-0&authSource=admin&retryWrites=true&w=majority';
+if (!MONGO_URI) {
+  throw new Error('You must provide a MongoLab URI');
+}
 
 // Mongoose's built in promise library is deprecated, replace it with ES2015 Promise
 mongoose.Promise = global.Promise;
@@ -55,9 +61,9 @@ app.use('/graphql', expressGraphQL({
 // Webpack runs as a middleware.  If any request comes in for the root route ('/')
 // Webpack will respond with the output of the webpack process: an HTML file and
 // a single bundle.js output of all of our client side Javascript
-const webpackMiddleware = require('webpack-dev-middleware');
+/*const webpackMiddleware = require('webpack-dev-middleware');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack.config.js');
 app.use(webpackMiddleware(webpack(webpackConfig)));
-
+*/
 module.exports = app;
